@@ -1,0 +1,36 @@
+City,Temperature (°C),Feels Like (°C),Weather,Description,Humidity (%),Pressure (hPa),Wind Speed (m/s)
+new_york,-3.56,-10.56,Clear,clear sky,51,1029,9.26
+los_angeles,18.35,17.55,Clear,clear sky,50,1018,0.0
+nashville,-3.29,-7.0,Clear,clear sky,66,1036,2.57
+austin,1.89,-2.25,Clouds,overcast clouds,66,1034,4.47
+san_francisco,12.64,11.87,Clouds,few clouds,73,1022,6.69
+accra,27.05,29.66,Clear,clear sky,78,1009,2.06
+auckland,23.46,23.38,Clouds,scattered clouds,58,1021,8.75
+bangkok,32.38,37.98,Clear,clear sky,60,1014,2.2
+barcelona,13.46,12.95,Mist,mist,80,1021,3.6
+bangalore,19.03,19.29,Fog,fog,88,1017,4.12
+bogotá,13.99,13.9,Clouds,scattered clouds,94,1020,3.6
+brisbane,28.74,29.56,Clouds,few clouds,52,1019,6.17
+buenos_aires,27.18,29.94,Clear,clear sky,78,1014,8.05
+cape_town,17.18,17.12,Clear,clear sky,83,1012,0.45
+delhi,13.07,13.04,Fog,fog,100,1017,2.57
+dubai,22.01,22.43,Clear,clear sky,83,1016,1.54
+honolulu,26.66,26.66,Clouds,few clouds,58,1018,3.6
+istanbul,-1.84,-3.92,Snow,light snow,86,1034,1.54
+jakarta,30.0,35.04,Rain,moderate rain,70,1011,3.4
+kyoto,4.5,-0.02,Clouds,broken clouds,69,1024,6.71
+lagos,28.12,33.95,Clouds,scattered clouds,89,1008,3.09
+london,10.22,9.67,Rain,light rain,91,1007,1.54
+melbourne,34.89,35.17,Clear,clear sky,33,1013,10.8
+ciudad_de_mexico,15.5,14.65,Rain,moderate rain,59,1021,2.68
+nairobi,14.99,13.98,Clouds,few clouds,55,1016,2.16
+paris,11.53,10.72,Rain,light rain,76,1012,4.12
+osaka,6.56,1.98,Rain,moderate rain,42,1024,8.75
+rome,6.88,6.04,Clear,clear sky,75,1029,1.54
+san_diego,13.82,13.5,Clear,clear sky,86,1019,1.54
+seoul,-1.49,-6.13,Clear,clear sky,27,1033,4.02
+shanghai,7.88,4.94,Clear,clear sky,39,1034,5.0
+sydney,26.66,26.66,Clouds,scattered clouds,61,1022,8.75
+toronto,-9.62,-15.4,Clouds,broken clouds,75,1031,3.3
+warsaw,-3.21,-8.32,Clear,clear sky,62,1031,4.12
+zurich,5.09,4.0,Mist,mist,90,1020,1.54
