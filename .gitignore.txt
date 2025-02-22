@@ -1,0 +1,6 @@
+# Ignore specific files
+weather_status_log.txt
+music_status_log.txt
+
+# Ignore entire directory
+
