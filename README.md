@@ -45,6 +45,10 @@ python analyze_data.py
 
 View the generated visualizations in the output/ directory.
 
+###Status
+This Project is in process and we are currently in the process of collecting data
+
+
 Contributions
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
