@@ -1,16 +1,16 @@
 # Weather_Impact_On_Music_Trends
 
-Overview
+### Overview
 
 This project explores the relationship between weather conditions and music trends. By leveraging APIs to collect data from music streaming services and daily charts of various locations, we aim to analyze how factors like temperature, humidity, and precipitation influence music preferences. The project performs exploratory data analysis (EDA) to uncover patterns and insights.
 
-Data Sources
+### Data Sources
 
 Music Data: Collected from various music streaming services' APIs, focusing on top charts and trending songs in different regions.
 
 Weather Data: Retrieved from OpenWeather API to obtain daily weather conditions for the corresponding locations of the music charts.
 
-Features
+### Features
 
 Automated data collection from music streaming APIs.
 
@@ -20,7 +20,7 @@ Exploratory Data Analysis (EDA) to identify correlations between weather conditi
 
 Visualization of trends and patterns.
 
-Install dependencies:
+### Install dependencies:
 
 pip install -r requirements.txt
 
@@ -33,7 +33,7 @@ Create a .env file and add:
 MUSIC_API_KEY=your_music_api_key
 WEATHER_API_KEY=your_weather_api_key
 
-Usage
+### Usage
 
 Run the data collection script:
 
