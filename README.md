@@ -49,6 +49,6 @@ View the generated visualizations in the output/ directory.
 This Project is in process and we are currently in the process of collecting data
 
 
-Contributions
+### Contributions
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
