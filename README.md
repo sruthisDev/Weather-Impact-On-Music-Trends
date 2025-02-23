@@ -20,15 +20,6 @@ Exploratory Data Analysis (EDA) to identify correlations between weather conditi
 
 Visualization of trends and patterns.
 
-Installation
-
-To set up the project, follow these steps:
-
-Clone the repository:
-
-git clone https://github.com/yourusername/weather-music-trends.git
-cd weather-music-trends
-
 Install dependencies:
 
 pip install -r requirements.txt
