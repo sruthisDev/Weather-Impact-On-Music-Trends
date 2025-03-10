@@ -1,0 +1,104 @@
+City,Temperature (°C),Feels Like (°C),Weather,Description,Humidity (%),Pressure (hPa),Wind Speed (m/s)
+accra,26.05,26.05,Mist,mist,94,1012,4.63
+almaty,7.85,7.06,Clouds,broken clouds,83,1012,1.62
+auckland,21.28,21.24,Clouds,overcast clouds,68,1021,3.6
+austin,12.56,11.93,Clear,clear sky,79,1015,1.54
+bangalore,28.77,27.99,Clouds,few clouds,35,1015,5.14
+bangkok,28.95,33.37,Clouds,overcast clouds,74,1016,3.19
+barcelona,13.09,12.15,Clear,clear sky,65,1019,3.13
+beijing,10.92,8.35,Clear,clear sky,11,1025,5.68
+berlin,8.31,6.13,Mist,mist,92,1015,3.6
+birmingham,4.18,2.35,Clear,clear sky,93,1012,2.06
+bogotá,11.99,11.7,Clouds,few clouds,94,1015,2.57
+bordeaux,10.21,9.71,Clouds,broken clouds,93,1019,6.69
+brisbane,27.42,28.99,Clouds,scattered clouds,64,1019,5.36
+budapest,1.65,0.38,Mist,mist,78,1024,1.34
+buenos_aires,23.14,23.83,Clear,clear sky,89,1010,1.79
+busan,7.91,4.71,Clear,clear sky,23,1024,5.66
+calgary,3.08,0.56,Clouds,broken clouds,48,1002,2.57
+cape_town,21.99,21.92,Clear,clear sky,64,1017,7.15
+chicago,6.46,4.79,Clouds,overcast clouds,92,1007,2.31
+ciudad_de_mexico,14.97,13.33,Clear,clear sky,31,1017,1.54
+cologne,6.18,4.68,Clear,clear sky,90,1015,2.06
+copenhagen,6.36,3.21,Mist,mist,97,1012,4.63
+dallas,11.45,10.82,Clear,clear sky,83,1014,3.09
+delhi,26.07,26.07,Haze,haze,36,1018,2.06
+denver,7.95,7.0,Clear,clear sky,41,1017,1.79
+detroit,3.88,0.73,Clouds,overcast clouds,88,1007,3.6
+dubai,23.01,22.75,Rain,light rain,53,1017,8.23
+dublin,5.26,0.78,Clouds,broken clouds,83,1011,7.2
+durban,27.45,30.07,Clouds,broken clouds,74,1012,7.08
+edmonton,-4.24,-7.62,Clear,clear sky,83,1003,2.16
+frankfurt,7.8,7.8,Fog,fog,97,1016,1.03
+fukuoka,10.86,9.31,Clouds,broken clouds,50,1026,6.17
+glasgow,5.71,1.54,Clouds,broken clouds,86,1005,6.69
+guadalajara,10.88,9.07,Clear,clear sky,40,1016,0.0
+guangzhou,15.92,14.85,Clouds,overcast clouds,49,1024,1.67
+guatemala_city,14.78,14.92,Clouds,scattered clouds,100,1017,0.45
+hamburg,8.97,6.68,Clouds,overcast clouds,91,1014,4.12
+honolulu,23.12,23.47,Clouds,few clouds,76,1020,2.57
+houston,11.09,10.71,Fog,fog,94,1016,4.12
+istanbul,4.27,0.61,Clear,clear sky,56,1026,4.63
+jakarta,31.62,37.38,Thunderstorm,thunderstorm,64,1009,4.63
+johannesburg,23.69,23.94,Clouds,overcast clouds,70,1013,0.45
+kingston,25.9,26.35,Clouds,few clouds,69,1013,5.66
+kuala_lumpur,30.62,34.52,Clouds,few clouds,62,1010,3.6
+kyiv,-4.68,-6.92,Clear,clear sky,73,1027,1.41
+kyoto,10.62,8.91,Clear,clear sky,45,1025,2.68
+lagos,27.12,31.54,Clouds,few clouds,94,1012,1.03
+lima,23.34,23.92,Clouds,overcast clouds,84,1011,1.78
+liverpool,3.49,2.17,Clouds,scattered clouds,87,1011,1.54
+london,7.29,5.56,Clouds,broken clouds,93,1012,2.57
+los_angeles,15.98,15.44,Clear,clear sky,69,1016,2.57
+lyon,9.8,7.29,Rain,moderate rain,90,1016,5.14
+madrid,9.0,6.09,Clouds,broken clouds,86,1024,5.66
+manchester,3.69,2.4,Clear,clear sky,86,1011,1.54
+manila,27.61,30.28,Clouds,broken clouds,73,1015,6.69
+marseille,13.08,12.66,Clouds,overcast clouds,85,1019,2.57
+medellin,17.66,18.04,Clouds,broken clouds,98,1014,7.6
+melbourne,23.24,23.29,Clear,clear sky,64,1020,6.17
+miami,20.94,21.44,Clear,clear sky,90,1009,5.14
+milano,10.04,9.42,Mist,mist,89,1021,2.06
+monterrey,16.99,15.71,Clear,clear sky,37,1015,1.02
+montreal,4.87,0.1,Clear,clear sky,71,1004,7.72
+mumbai,35.0,32.83,Smoke,smoke,18,1013,2.06
+munich,5.62,5.62,Clouds,overcast clouds,88,1018,1.23
+nagoya,12.2,10.55,Clear,clear sky,41,1025,0.45
+naha,16.93,15.96,Clouds,scattered clouds,49,1026,2.06
+nairobi,19.96,19.47,Clouds,few clouds,56,1015,5.66
+napoli,12.35,11.96,Mist,mist,89,1024,2.06
+nashville,6.82,5.28,Clear,clear sky,71,1014,2.23
+new_york,5.43,2.05,Clear,clear sky,57,1011,4.63
+osaka,9.35,7.15,Clouds,few clouds,39,1026,4.12
+ottawa,3.12,-0.82,Clouds,broken clouds,73,1004,4.63
+paris,8.99,7.58,Mist,mist,98,1011,2.57
+philadelphia,5.33,3.23,Clouds,broken clouds,60,1012,2.57
+phoenix,18.92,17.42,Clear,clear sky,21,1013,2.57
+prague,4.08,4.08,Mist,mist,87,1019,1.03
+quebec_city,4.73,-0.71,Clouds,overcast clouds,74,1001,9.77
+rio_de_janeiro,25.69,26.48,Clear,clear sky,83,1016,2.06
+riyadh,7.92,4.35,Clouds,overcast clouds,29,1027,6.74
+rome,11.21,10.4,Drizzle,light intensity drizzle,77,1023,1.03
+san_diego,13.2,12.8,Mist,mist,85,1016,1.54
+san_francisco,11.67,11.24,Clouds,few clouds,90,1024,1.34
+san_jose,13.89,13.58,Clouds,scattered clouds,86,1024,3.09
+san_juan,23.77,24.47,Clear,clear sky,87,1014,3.34
+santiago,23.03,22.75,Clear,clear sky,52,1010,0.57
+santo_domingo,21.81,22.34,Clear,clear sky,88,1014,2.04
+sao_paulo,22.77,23.32,Clear,clear sky,85,1017,1.34
+sapporo,3.12,-0.19,Clouds,few clouds,62,1016,3.6
+seattle,9.74,5.81,Clouds,overcast clouds,75,1002,10.29
+sendai,9.64,8.03,Clouds,scattered clouds,34,1022,3.09
+seoul,5.76,2.0,Clouds,broken clouds,61,1024,5.66
+shanghai,7.88,5.97,Clouds,overcast clouds,61,1028,3.0
+sydney,22.3,22.47,Clouds,broken clouds,72,1023,5.66
+taipei,21.2,20.66,Clouds,broken clouds,49,1023,2.57
+tel_aviv,9.1,8.09,Clear,clear sky,58,1027,2.06
+tokyo,10.76,9.17,Clouds,few clouds,49,1022,8.75
+toronto,3.34,0.08,Clouds,scattered clouds,81,1005,3.6
+vancouver,9.57,5.69,Clouds,overcast clouds,76,1000,9.77
+vienna,2.44,0.13,Clouds,overcast clouds,88,1021,2.24
+warsaw,2.65,-0.39,Fog,fog,93,1021,3.09
+washington_dc,5.64,4.63,Clouds,few clouds,68,1012,1.54
+winnipeg,-1.01,-1.01,Clouds,overcast clouds,69,1010,1.03
+zurich,7.67,7.67,Rain,light rain,88,1016,0.89
