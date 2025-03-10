@@ -23,8 +23,11 @@ api_key = "a1b3d4bc4b2f7d2e5a29a716a08028eb"
 current_month = datetime.now().strftime("%m")
 current_date = datetime.now().strftime("%d")
 today_date = datetime.now().strftime("%Y-%m-%d")
+parent_folder = "Data"
+os.makedirs(parent_folder, exist_ok=True)
 folder_name = f"data_{current_month}_{current_date}"
-os.makedirs(folder_name, exist_ok=True)
+folder_path = os.path.join(parent_folder, folder_name)
+os.makedirs(folder_path, exist_ok=True)
 
 # Log file paths
 music_log_file_path = os.path.join( "music_status_log.txt")
@@ -106,7 +109,7 @@ def main():
                     print(f"Error extracting data for a song in {url}: {e}")
             city_name = re.search(r"top-25-([a-zA-Z-%]+)", url).group(1).replace("-", "_").lower()
             filename = f"{city_name}_{current_month}_{current_date}.csv"
-            filepath = os.path.join(folder_name, filename)
+            filepath = os.path.join(parent_folder, folder_name, filename)
             df = pd.DataFrame(data, columns=["Date", "Song Title", "Artist", "Album", "Duration"])
             df.to_csv(filepath, index=False)
             dashboard.append([city_name, len(data)])
@@ -244,7 +247,7 @@ def main():
             status_dashboard.append(f"| {index:<8} | {name:<20} | {len(weather_data):<20} | {'Success':<10} |")
         else:
             status_dashboard.append(f"| {index:<8} | {name:<20} | {0:<20} | {'Failure':<10} |")
-    output_file = os.path.join(folder_name, f"weather_{today_date.replace('-', '_')}.csv")
+    output_file = os.path.join(parent_folder, folder_name, f"weather_{today_date.replace('-', '_')}.csv")
     df = pd.DataFrame(structured_weather_data)
     df.to_csv(output_file, index=False, sep=',')
     with open(weather_log_file_path, "a") as log:
