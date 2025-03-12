@@ -37,7 +37,7 @@ WEATHER_API_KEY=your_weather_api_key
 
 Run the data collection script:
 
-python collect_data.py
+python web_crawler_api.py
 
 Perform exploratory data analysis:
 
