@@ -2,5 +2,9 @@
 weather_status_log.txt
 music_status_log.txt
 
+#ignore db files
+*.db
+
 # Ignore entire directory
+\songs_features_data
 
