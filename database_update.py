@@ -3,6 +3,9 @@ import csv
 import os
 import re
 from datetime import datetime
+from dotenv import load_dotenv
+import requests
+import base64
 
 DB_FILE = "music_weather.db"
 
@@ -15,10 +18,15 @@ weatherFileNamePrefix = "weather_"
 
 current_year = datetime.now().year
 
+
+
 def CreateSongTable():
-	cursor.execute("""
+    """
+    Creates the 'songs' table in the SQLite database if it does not already exist.
+    """
+    cursor.execute("""
 		CREATE TABLE IF NOT EXISTS songs (
-			song_id INTEGER PRIMARY KEY AUTOINCREMENT,
+			spotify_id TEXT UNIQUE PRIMARY KEY,
 			title TEXT NOT NULL,
 			artist TEXT NOT NULL,
 			album TEXT,
@@ -26,21 +34,31 @@ def CreateSongTable():
 			danceability FLOAT,
 			bpm INTEGER,
 			energy FLOAT,
-			valence FLOAT,
-			spotify_id TEXT UNIQUE)
+			valence FLOAT)
 		""")
 
+
+
 def CreateChartsTable():
+	"""
+    Creates the 'charts' table in the SQLite database if it does not already exist.
+    The table includes columns for song ranking in a specific city and date, with references to the song's Spotify ID.
+    """
 	cursor.execute("""
 		CREATE TABLE IF NOT EXISTS charts (
-			song_id INTEGER NOT NULL,
+			spotify_id TEXT NOT NULL,
 			city TEXT NOT NULL,
 			date TEXT NOT NULL,
 			rank INTEGER NOT NULL,
 			PRIMARY KEY (city, date, rank))
 		""")
 
+
+
 def CreateWeatherTable():
+	"""
+    Creates the 'weather' table in the SQLite database if it does not already exist.
+    """
 	cursor.execute("""
 		CREATE TABLE IF NOT EXISTS weather(
 			weather_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -57,13 +75,58 @@ def CreateWeatherTable():
 			)
 		""")
 
+
 def CreateTables():
+	"""
+    Calls the individual table creation functions to create 'songs', 'charts', and 'weather' tables in the database.
+    """
 	CreateSongTable()
 	CreateChartsTable()
 	CreateWeatherTable()
 
-# Function to Insert Weather Data
+
+def getTrackID(song_name, artist_name):
+    """
+    Retrieves the Spotify ID of a song based on the song's name and artist using Spotify's API.
+    """
+    # Load environment variables
+    load_dotenv()
+    
+    # Get client_id and client_secret from environment variables
+    client_id = os.getenv("MUSIC_CLIENT_ID")
+    client_secret = os.getenv("MUSIC_CLIENT_SECRET")
+    
+    if not client_id or not client_secret:
+        raise Exception("Missing client ID or client secret in .env file")
+    
+    # Obtain access token
+    auth_url = "https://accounts.spotify.com/api/token"
+    auth_headers = {
+        "Authorization": "Basic " + base64.b64encode(f"{client_id}:{client_secret}".encode()).decode(),
+    }
+    auth_data = {"grant_type": "client_credentials"}
+    auth_response = requests.post(auth_url, headers=auth_headers, data=auth_data)
+    access_token = auth_response.json().get("access_token")
+    
+    if not access_token:
+        raise Exception("Failed to obtain access token")
+    
+    # Search for track
+    query = f"track:{song_name} artist:{artist_name}"
+    search_url = f"https://api.spotify.com/v1/search?q={requests.utils.quote(query)}&type=track&limit=1"
+    search_headers = {"Authorization": f"Bearer {access_token}"}
+    search_response = requests.get(search_url, headers=search_headers)
+    data = search_response.json()
+    
+    results = data.get("tracks", {}).get("items", [])
+    return results[0]["id"] if results else None
+
+
 def insertWeather(city, date, temperature, weather, weather_condition, humidity, pressure, wind_speed, precipitation):
+    """
+    Inserts weather data into the 'weather' table for a specific city and date.
+    Ensures that duplicate entries for the same city and date are avoided.
+    """
     try:
         cursor.execute("""
             SELECT COUNT(1) FROM weather WHERE city = ? AND date = ?
@@ -80,8 +143,13 @@ def insertWeather(city, date, temperature, weather, weather_condition, humidity,
     except sqlite3.Error as e:
         print(f"Error inserting weather data for {city} on {date}: {e}")
 
+
+
 # Function to Parse Weather CSV and Insert Data
 def parseWeatherCSV(file_path, dateString):
+    """
+    Parses a weather CSV file and inserts weather data into the database.
+    """
     if not os.path.exists(file_path):
         print(f"Error: The file {file_path} was not found.")
         return  # Exit the function if the file doesn't exist
@@ -119,8 +187,12 @@ def parseWeatherCSV(file_path, dateString):
         print(f"Error reading the file {file_path}: {e}")
 
 
+
 def PopulateWeather():
-	
+	"""
+    Populates the 'weather' table by processing weather data files stored in the 'Data' folder.
+    Iterates through each folder and CSV file in the directory, parsing and inserting weather data for each city and date.
+    """
 	for folder_name in os.listdir(data_base_folder):
 		folder_path = os.path.join(data_base_folder, folder_name)
 
@@ -134,17 +206,22 @@ def PopulateWeather():
 
 			parseWeatherCSV(weatherFilePath, dateString)
 
-def insertChart(city, date, songTitle, rank):
+
+def insertChart(spotify_id, city, date, songTitle, rank):
+    """
+    Inserts a song's chart ranking into the 'charts' table for a specific city and date.
+    Ensures that duplicate chart entries for the same city, date, and rank are avoided.
+    """
     try:
-        # Retrieve the song_id based on the title
-        cursor.execute("SELECT song_id FROM songs WHERE title = ?", (songTitle,))
+        # Retrieve the song_id based on the spotify_id
+        cursor.execute("SELECT spotify_id FROM songs WHERE spotify_id = ?", (spotify_id,))
         result = cursor.fetchone()
         
         if result is None:
-            print(f"Error: Song '{songTitle}' not found in the songs table.")
-            return  # Skip inserting this entry since song_id is missing
+            print(f"Error: Song with spotify_id '{spotify_id}' not found in the songs table.")
+            return 
         
-        song_id = result[0]  # Extract song_id from the query result
+        spotify_id = result[0]  # Extract song_id from the query result
 
         # Check if the chart entry already exists
         cursor.execute("""
@@ -153,34 +230,43 @@ def insertChart(city, date, songTitle, rank):
 
         if cursor.fetchone()[0] == 0:  # If no entry exists, insert new ranking
             cursor.execute("""
-                INSERT INTO charts (song_id, city, date, rank)
+                INSERT INTO charts (spotify_id, city, date, rank)
                 VALUES (?, ?, ?, ?)
-            """, (song_id, city, date, rank))
+            """, (spotify_id, city, date, rank))
             print(f"Chart entry for {songTitle} in {city} on {date} ranked {rank} inserted.")
         else:
             print(f"Chart entry for {songTitle} in {city} on {date} already exists.")
-
     except sqlite3.Error as e:
         print(f"Error inserting chart entry for {songTitle} in {city} on {date}: {e}")
 
-def insertSong(title, artist, album, duration):
+
+def insertSong(spotify_id, title, artist, album, duration):
+    """
+    Inserts a song's details into the 'songs' table. Ensures that duplicate songs (based on Spotify ID) are avoided.
+    """
     try:
+        # Check for duplicates using spotify_id
         cursor.execute("""
             SELECT COUNT(1) FROM songs WHERE spotify_id = ?
-        """, (title,))  # We use song title or spotify_id to check for duplicates
+        """, (spotify_id,))
 
         if cursor.fetchone()[0] == 0:  # If no data exists, insert new song data
             cursor.execute("""
-                INSERT INTO songs (title, artist, album, duration_sec)
-                VALUES (?, ?, ?, ?)
-            """, (title, artist, album, duration))
+                INSERT INTO songs (spotify_id, title, artist, album, duration_sec)
+                VALUES (?, ?, ?, ?, ?)
+            """, (spotify_id, title, artist, album, duration))
             print(f"Song '{title}' by {artist} inserted.")
         else:
             print(f"Song '{title}' by {artist} already exists.")
     except sqlite3.Error as e:
         print(f"Error inserting song '{title}' by {artist}: {e}")
 
+
+
 def parseChartCsv(file_path, dateString, cityName):
+    """
+    Parses a chart CSV file and inserts chart ranking data for songs into the database.
+    """
     if not os.path.exists(file_path):
         print(f"Error: The file {file_path} was not found.")
         return  # Exit the function if the file doesn't exist
@@ -209,8 +295,10 @@ def parseChartCsv(file_path, dateString, cityName):
                     else:
                         duration = None
 
-                    insertSong(songTitle, artist, album, duration)
-                    insertChart(cityName, dateString, songTitle, rank)
+                    spotify_id = getTrackID(songTitle, artist)
+                    if spotify_id:
+                        insertSong(spotify_id, songTitle, artist, album, duration)
+                        insertChart(spotify_id, cityName, dateString, songTitle, rank)
 
                     rank += 1  # Incrementing rank for the next song
                 except Exception as e:
@@ -219,9 +307,11 @@ def parseChartCsv(file_path, dateString, cityName):
     except Exception as e:
         print(f"Error reading the file {file_path}: {e}")
 
-
 def PopulateCharts():
-
+	"""
+    Populates the 'charts' table by processing chart ranking data files stored in the 'Data' folder.
+    Iterates through each folder and CSV file in the directory, parsing and inserting chart data for each city and date.
+    """
 	for folder_name in os.listdir(data_base_folder):
 		folder_path = os.path.join(data_base_folder, folder_name)
 
@@ -258,6 +348,9 @@ def PopulateCharts():
 
 
 def PopulateData():
+	"""
+    Populates the database with both weather and chart data by calling the PopulateWeather() and PopulateCharts() functions.
+    """
 	PopulateWeather()
 	PopulateCharts()
 
