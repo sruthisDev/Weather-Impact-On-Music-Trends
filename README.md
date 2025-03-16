@@ -30,7 +30,8 @@ Obtain API keys from music streaming services and OpenWeather API.
 
 Create a .env file and add:
 
-MUSIC_API_KEY=your_music_api_key
+MUSIC_CLIENT_ID=your_music_api_key
+MUSIC_CLIENT_SECRET=your_spotify_secret_key
 WEATHER_API_KEY=your_weather_api_key
 
 ### Usage
@@ -46,7 +47,7 @@ python analyze_data.py
 View the generated visualizations in the output/ directory.
 
 ### Status
-This Project is in process and we are currently in the process of collecting data
+This Project is in process and data has been collected. Next step is EDA
 
 
 ### Contributions
