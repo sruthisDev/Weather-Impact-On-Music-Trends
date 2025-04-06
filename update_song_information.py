@@ -3,7 +3,6 @@ import os
 import requests
 import base64
 import logging
-import argparse
 from dotenv import load_dotenv
 from logger_config import get_script_logger
 
