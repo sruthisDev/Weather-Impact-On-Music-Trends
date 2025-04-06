@@ -2,14 +2,27 @@ import sqlite3
 import os
 import requests
 import base64
+import logging
+import argparse
 from dotenv import load_dotenv
 from logger_config import get_script_logger
+
+# Parse command line arguments
+parser = argparse.ArgumentParser(description='Update album information from Spotify API')
+parser.add_argument('--log-level', 
+                    choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+                    default='WARNING',
+                    help='Set the logging level (default: WARNING)')
+args = parser.parse_args()
+
+# Convert string log level to logging constant
+log_level = getattr(logging, args.log_level)
 
 # Load environment variables
 load_dotenv()
 
-# Set up logger
-logger = get_script_logger('update_albums')
+# Set up logger with the specified log level
+logger = get_script_logger('update_albums', level=log_level)
 
 # Database connection
 DB_FILE = "music_weather.db"
@@ -67,8 +80,8 @@ def update_albums():
     cursor.execute("SELECT spotify_id, title, artist, album FROM songs")
     songs = cursor.fetchall()
     
-    logger.info(f"Found {len(songs)} songs in the database")
-    logger.info("=" * 50)  # Add a separator line
+    logger.warning(f"Found {len(songs)} songs in the database")
+    logger.warning("=" * 50)  # Add a separator line
     
     # Track statistics
     updated_count = 0
@@ -81,7 +94,8 @@ def update_albums():
     
     # Update each song
     for spotify_id, title, artist, current_album in songs:
-        logger.info(f"Processing: {title} by {artist}")
+        # Use debug level for processing messages to filter them out
+        logger.debug(f"Processing: {title} by {artist}")
         
         spotify_info = get_track_info(spotify_id, access_token)
         
@@ -101,7 +115,7 @@ def update_albums():
                 if spotify_album != current_album:
                     # Add to updates list instead of executing immediately
                     updates.append((spotify_album, spotify_id))
-                    logger.info(f"Will update album from '{current_album}' to '{spotify_album}'")
+                    logger.warning(f"Will update album from '{current_album}' to '{spotify_album}'")
                     updated_count += 1
                 else:
                     logger.debug(f"Album information is already correct: '{current_album}'")
@@ -111,29 +125,29 @@ def update_albums():
             error_count += 1
         
         # Add a separator between songs
-        logger.info("-" * 50)
+        logger.debug("-" * 50)
     
     # Perform bulk update if there are any updates
     if updates:
-        logger.info(f"Performing bulk update for {len(updates)} songs")
+        logger.warning(f"Performing bulk update for {len(updates)} songs")
         cursor.executemany("""
             UPDATE songs 
             SET album = ? 
             WHERE spotify_id = ?
         """, updates)
-        logger.info("Bulk update completed")
+        logger.warning("Bulk update completed")
     
     # Commit all changes at once
     conn.commit()
-    logger.info("=" * 50)  # Add a separator line
-    logger.info(f"Album update complete. Updated: {updated_count}, Unchanged: {unchanged_count}, Errors: {error_count}, Mismatches: {mismatch_count}")
+    logger.warning("=" * 50)  # Add a separator line
+    logger.warning(f"Album update complete. Updated: {updated_count}, Unchanged: {unchanged_count}, Errors: {error_count}, Mismatches: {mismatch_count}")
 
 if __name__ == "__main__":
     try:
-        logger.info("Starting album update process")
+        logger.warning("Starting album update process")
         update_albums()
     except Exception as e:
         logger.error(f"Error: {e}", exc_info=True)
     finally:
         conn.close()
-        logger.info("Database connection closed") 
+        logger.warning("Database connection closed") 
