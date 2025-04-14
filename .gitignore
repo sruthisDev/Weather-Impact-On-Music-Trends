@@ -17,5 +17,6 @@ logs/
 .vscode/
 
 # Environment variables
-.env
+*.env
 
+__pycache__/
