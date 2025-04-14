@@ -10,6 +10,8 @@ Music Data: Collected from various music streaming services' APIs, focusing on t
 
 Weather Data: Retrieved from OpenWeather API to obtain daily weather conditions for the corresponding locations of the music charts.
 
+Data of BPM obtained from https://getsongbpm.com
+
 ### Features
 
 Automated data collection from music streaming APIs.

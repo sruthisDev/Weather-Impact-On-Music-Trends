@@ -4,7 +4,18 @@ music_status_log.txt
 
 #ignore db files
 *.db
+*.sqlite3
 
 # Ignore entire directory
 \songs_features_data
+
+# Logs directory
+logs/
+*.log
+
+# IDE files
+.vscode/
+
+# Environment variables
+.env
 
