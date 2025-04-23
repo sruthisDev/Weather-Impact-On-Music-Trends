@@ -25,3 +25,5 @@ __pycache__/
 tunebat_data/
 deezer_previews/
 deezer_data/
+songs_preview.zip
+deezer_progress.json
