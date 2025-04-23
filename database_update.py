@@ -6,6 +6,23 @@ from datetime import datetime
 from dotenv import load_dotenv
 import requests
 import base64
+import logging
+import argparse
+from logger_config import get_script_logger
+
+# Parse command line arguments
+parser = argparse.ArgumentParser(description='Update database with weather and music data')
+parser.add_argument('--log-level', 
+                    choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+                    default='WARNING',
+                    help='Set the logging level (default: WARNING)')
+args = parser.parse_args()
+
+# Convert string log level to logging constant
+log_level = getattr(logging, args.log_level)
+
+# Set up logger
+logger = get_script_logger('database_update', level=log_level)
 
 DB_FILE = "music_weather.db"
 
@@ -36,6 +53,7 @@ def CreateSongTable():
 			energy FLOAT,
 			valence FLOAT)
 		""")
+    logger.info("Songs table created or already exists")
 
 
 
@@ -52,6 +70,7 @@ def CreateChartsTable():
 			rank INTEGER NOT NULL,
 			PRIMARY KEY (city, date, rank))
 		""")
+    logger.info("Charts table created or already exists")
 
 
 
@@ -74,6 +93,7 @@ def CreateWeatherTable():
 			UNIQUE(city,date)
 			)
 		""")
+    logger.info("Weather table created or already exists")
 
 
 def CreateTables():
@@ -83,6 +103,7 @@ def CreateTables():
 	CreateSongTable()
 	CreateChartsTable()
 	CreateWeatherTable()
+    logger.info("All tables created successfully")
 
 
 def getTrackID(song_name, artist_name):
@@ -97,6 +118,7 @@ def getTrackID(song_name, artist_name):
     client_secret = os.getenv("MUSIC_CLIENT_SECRET")
     
     if not client_id or not client_secret:
+        logger.error("Missing client ID or client secret in .env file")
         raise Exception("Missing client ID or client secret in .env file")
     
     # Obtain access token
@@ -109,6 +131,7 @@ def getTrackID(song_name, artist_name):
     access_token = auth_response.json().get("access_token")
     
     if not access_token:
+        logger.error("Failed to obtain access token")
         raise Exception("Failed to obtain access token")
     
     # Search for track
@@ -119,7 +142,12 @@ def getTrackID(song_name, artist_name):
     data = search_response.json()
     
     results = data.get("tracks", {}).get("items", [])
-    return results[0]["id"] if results else None
+    if results:
+        logger.debug(f"Found Spotify ID for '{song_name}' by '{artist_name}': {results[0]['id']}")
+        return results[0]["id"]
+    else:
+        logger.warning(f"No Spotify ID found for '{song_name}' by '{artist_name}'")
+        return None
 
 
 def insertWeather(city, date, temperature, weather, weather_condition, humidity, pressure, wind_speed, precipitation):
@@ -137,11 +165,11 @@ def insertWeather(city, date, temperature, weather, weather_condition, humidity,
                 INSERT INTO weather (city, date, temperature, weather, weatherCondition, humidity, pressure, wind_speed, precipitation)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (city, date, temperature, weather, weather_condition, humidity, pressure, wind_speed, precipitation))
-            print(f"Weather data for {city} on {date} inserted.")
+            logger.info(f"Weather data for {city} on {date} inserted")
         else:
-            print(f"Weather data for {city} on {date} already exists.")
+            logger.debug(f"Weather data for {city} on {date} already exists")
     except sqlite3.Error as e:
-        print(f"Error inserting weather data for {city} on {date}: {e}")
+        logger.error(f"Error inserting weather data for {city} on {date}: {e}")
 
 
 
@@ -151,7 +179,7 @@ def parseWeatherCSV(file_path, dateString):
     Parses a weather CSV file and inserts weather data into the database.
     """
     if not os.path.exists(file_path):
-        print(f"Error: The file {file_path} was not found.")
+        logger.error(f"Error: The file {file_path} was not found")
         return  # Exit the function if the file doesn't exist
     
     try:
@@ -181,10 +209,10 @@ def parseWeatherCSV(file_path, dateString):
                         precipitation
                     )
                 except Exception as e:
-                    print(f"Error processing row for {row['City']} on {row['Date']}: {e}")
+                    logger.error(f"Error processing row for {row['City']} on {row['Date']}: {e}")
                     
     except Exception as e:
-        print(f"Error reading the file {file_path}: {e}")
+        logger.error(f"Error reading the file {file_path}: {e}")
 
 
 
@@ -197,7 +225,7 @@ def PopulateWeather():
 		folder_path = os.path.join(data_base_folder, folder_name)
 
 		if(os.path.isdir(folder_path)):
-			print(f"Processing folder: {folder_name}")
+			logger.info(f"Processing folder: {folder_name}")
 
 			month, day = folder_name.split('_')[1], folder_name.split('_')[2]
 			dateString = str(current_year) + "-" + month + "-" + day
@@ -218,7 +246,7 @@ def insertChart(spotify_id, city, date, songTitle, rank):
         result = cursor.fetchone()
         
         if result is None:
-            print(f"Error: Song with spotify_id '{spotify_id}' not found in the songs table.")
+            logger.error(f"Error: Song with spotify_id '{spotify_id}' not found in the songs table")
             return 
         
         spotify_id = result[0]  # Extract song_id from the query result
@@ -233,11 +261,11 @@ def insertChart(spotify_id, city, date, songTitle, rank):
                 INSERT INTO charts (spotify_id, city, date, rank)
                 VALUES (?, ?, ?, ?)
             """, (spotify_id, city, date, rank))
-            print(f"Chart entry for {songTitle} in {city} on {date} ranked {rank} inserted.")
+            logger.info(f"Chart entry for {songTitle} in {city} on {date} ranked {rank} inserted")
         else:
-            print(f"Chart entry for {songTitle} in {city} on {date} already exists.")
+            logger.debug(f"Chart entry for {songTitle} in {city} on {date} already exists")
     except sqlite3.Error as e:
-        print(f"Error inserting chart entry for {songTitle} in {city} on {date}: {e}")
+        logger.error(f"Error inserting chart entry for {songTitle} in {city} on {date}: {e}")
 
 
 def insertSong(spotify_id, title, artist, album, duration):
@@ -255,11 +283,11 @@ def insertSong(spotify_id, title, artist, album, duration):
                 INSERT INTO songs (spotify_id, title, artist, album, duration_sec)
                 VALUES (?, ?, ?, ?, ?)
             """, (spotify_id, title, artist, album, duration))
-            print(f"Song '{title}' by {artist} inserted.")
+            logger.info(f"Song '{title}' by {artist} inserted")
         else:
-            print(f"Song '{title}' by {artist} already exists.")
+            logger.debug(f"Song '{title}' by {artist} already exists")
     except sqlite3.Error as e:
-        print(f"Error inserting song '{title}' by {artist}: {e}")
+        logger.error(f"Error inserting song '{title}' by {artist}: {e}")
 
 
 
@@ -268,7 +296,7 @@ def parseChartCsv(file_path, dateString, cityName):
     Parses a chart CSV file and inserts chart ranking data for songs into the database.
     """
     if not os.path.exists(file_path):
-        print(f"Error: The file {file_path} was not found.")
+        logger.error(f"Error: The file {file_path} was not found")
         return  # Exit the function if the file doesn't exist
 
     try:
@@ -290,7 +318,7 @@ def parseChartCsv(file_path, dateString, cityName):
                             minutes, seconds = map(int, duration_str.split(':'))
                             duration = (minutes * 60) + seconds
                         except ValueError:
-                            print(f"Error: Invalid duration format for song {songTitle}. Skipping.")
+                            logger.error(f"Error: Invalid duration format for song {songTitle}. Skipping.")
                             duration = None
                     else:
                         duration = None
@@ -302,10 +330,10 @@ def parseChartCsv(file_path, dateString, cityName):
 
                     rank += 1  # Incrementing rank for the next song
                 except Exception as e:
-                    print(f"Error processing row: {e}")
+                    logger.error(f"Error processing row: {e}")
 
     except Exception as e:
-        print(f"Error reading the file {file_path}: {e}")
+        logger.error(f"Error reading the file {file_path}: {e}")
 
 def PopulateCharts():
 	"""
@@ -316,7 +344,7 @@ def PopulateCharts():
 		folder_path = os.path.join(data_base_folder, folder_name)
 
 		if(os.path.isdir(folder_path)):
-			print(f"Processing folder: {folder_name}")
+			logger.info(f"Processing folder: {folder_name}")
 
 		month, day = folder_name.split('_')[1], folder_name.split('_')[2]
 
@@ -324,7 +352,7 @@ def PopulateCharts():
 			
 			if not fileName.startswith("weather"):
 
-				print (f"Processing fileName: {fileName}")
+				logger.info(f"Processing fileName: {fileName}")
 
 				pattern = r"^([a-zA-Z_]+(?:_[a-zA-Z_]+)*)_(\d{2})_(\d{2})\.csv$"
 
@@ -340,11 +368,12 @@ def PopulateCharts():
 				    	parseChartCsv(filePath, dateString, cityName)
 				    
 				    else:
+				    	logger.error("Issue with fileName and folder")
 				    	assert False, "Issue with fileName and folder"
 
-				    print(f"City: {cityName}, Date: {date}")
+				    logger.debug(f"City: {cityName}, Date: {date}")
 				else:
-				    print("Filename does not match expected format.")
+				    logger.warning("Filename does not match expected format")
 
 
 def PopulateData():
@@ -353,6 +382,7 @@ def PopulateData():
     """
 	PopulateWeather()
 	PopulateCharts()
+    logger.info("Data population completed")
 
 
 if __name__ == "__main__":
@@ -360,3 +390,4 @@ if __name__ == "__main__":
 	PopulateData()
 	con.commit()
 	con.close()
+    logger.info("Database update completed successfully")
