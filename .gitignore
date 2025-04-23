@@ -8,6 +8,7 @@ music_status_log.txt
 
 # Ignore entire directory
 \songs_features_data
+\data_04_15
 
 # Logs directory
 logs/
@@ -20,3 +21,10 @@ logs/
 *.env
 
 __pycache__/
+
+# Data directories
+tunebat_data/
+deezer_previews/
+deezer_data/
+songs_preview.zip
+deezer_progress.json
