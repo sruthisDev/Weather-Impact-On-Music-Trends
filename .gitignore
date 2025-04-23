@@ -20,3 +20,8 @@ logs/
 *.env
 
 __pycache__/
+
+# Data directories
+tunebat_data/
+deezer_previews/
+deezer_data/
